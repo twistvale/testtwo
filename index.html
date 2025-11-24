@@ -1,93 +1,84 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Your Name</title>
-  <style>
-    :root {
-      --bg: #0d0d0f;
-      --fg: #ffffff;
-      --muted: #8c8c94;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      color: var(--fg);
-      line-height: 1.4;
-      background-image:
-        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.03), transparent 60%),
-        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.02), transparent 60%);
-      position: relative;
-    }
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      mix-blend-mode: overlay;
-      opacity: 0.28;
-      background: black;
-      filter: url(#grain);
-      z-index: 2;
-    }
-    main {
-      width: 100%;
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 90px 24px;
-      position: relative;
-      z-index: 3;
-    }
-    header h1 { font-size: 48px; font-weight: 700; margin-bottom: 16px; }
-    header p { color: var(--muted); max-width: 520px; }
-    h2 { font-size: 20px; margin: 60px 0 16px; color: var(--muted); letter-spacing: 1px; }
-    .project-list { display: flex; flex-direction: column; gap: 22px; }
-    .proj { padding: 22px; border-radius: 14px; background: #16161a; border: 1px solid #1e1e23; }
-    .proj-title { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
-    .proj-desc { color: var(--muted); font-size: 14px; }
-    .links { display: flex; gap: 14px; margin-top: 18px; }
-    .links a { color: var(--fg); text-decoration: none; padding: 10px 14px; border-radius: 8px; background: #16161a; border: 1px solid #1e1e23; font-size: 14px; }
-    footer { text-align: center; padding: 60px 0 20px; color: var(--muted); font-size: 13px; }
-  </style>
-</head>
-<body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Your Name</title>
+    <style>
+      :root {
+        --bg: #0d0d0f;
+        --fg: #fff;
+        --muted: #8c8c94;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        background: var(--bg);
+        color: var(--fg);
+        position: relative;
+        min-height: 100vh;
+      }
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        mix-blend-mode: overlay;
+        opacity: 0.28;
+        background: black;
+        filter: url(#grain);
+        z-index: 9999;
+      }
 
-<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;">
-  <filter id="grain">
-    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="5" />
-    <feColorMatrix type="saturate" values="0" />
-    <feBlend in="SourceGraphic" mode="multiply" />
-  </filter>
-</svg>
+      main {
+        max-width: 760px;
+        margin: auto;
+        padding: 90px 24px;
+        position: relative;
+        z-index: 1;
+      }
+      h1 { font-size: 48px; margin-bottom: 16px; }
+      p { color: var(--muted); max-width: 520px; }
+      section { margin-top: 60px; }
+      .links { display: flex; gap: 14px; margin-top: 18px; }
+      .links a {
+        color: var(--fg);
+        text-decoration: none;
+        padding: 10px 14px;
+        border-radius: 8px;
+        background: #16161a;
+        border: 1px solid #1e1e23;
+      }
+      footer { text-align: center; padding: 60px 0 20px; color: var(--muted); font-size: 13px; }
+    </style>
+  </head>
+  <body>
+    <!-- SVG filter definition -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; width: 0; height: 0;">
+      <filter id="grain">
+        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="5" />
+        <feColorMatrix type="saturate" values="0" />
+        <feBlend in="SourceGraphic" mode="multiply" />
+      </filter>
+    </svg>
 
-  <main>
-    <header>
+    <main>
       <h1>Your Name</h1>
       <p>Short intro about who you are.</p>
-    </header>
-
-    <section>
-      <h2>Work</h2>
-      <div class="project-list">
-        <div class="proj"><div class="proj-title">Project One</div><div class="proj-desc">Description.</div></div>
-        <div class="proj"><div class="proj-title">Project Two</div><div class="proj-desc">Description.</div></div>
-      </div>
-    </section>
-
-    <section>
-      <h2>About</h2>
-      <p style="color:var(--muted); max-width:580px;">About text.</p>
-    </section>
-
-    <section>
-      <h2>Contact</h2>
-      <div class="links">
-        <a href="mailto:you@example.com">Email</a>
-      </div>
-    </section>
-
-    <footer>© 2025 — Your Name</footer>
-  </main>
-</body>
+      <section>
+        <h2>Work</h2>
+        <p style="color: var(--muted);">Project info here.</p>
+      </section>
+      <section>
+        <h2>About</h2>
+        <p style="color: var(--muted);">About text here.</p>
+      </section>
+      <section>
+        <h2>Contact</h2>
+        <div class="links">
+          <a href="mailto:you@example.com">Email</a>
+        </div>
+      </section>
+      <footer>© 2025 — Your Name</footer>
+    </main>
+  </body>
 </html>
