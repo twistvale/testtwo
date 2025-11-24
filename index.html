@@ -1,331 +1,206 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Vale — Portfolio</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<style>
-  /* ----------------------------
-     Base / Reset
-     ---------------------------- */
-  :root{
-    --bg-white: #fbfbfb; /* white-ish base like Eric */
-    --text:#0f1724;
-    --muted:#7f8896;
-    --pink: rgba(255,76,160,1);
-    --blue: rgba(72,150,255,1);
-    --green: rgba(100,235,165,1);
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%}
-  body{
-    font-family: Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
-    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-    background: var(--bg-white);
-    color:var(--text);
-    overflow-x:hidden;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vale Portfolio</title>
+  <style>
+    /* RESET */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
 
-  /* ----------------------------
-     Background: white base + moving color blobs + strong grain
-     Explanation:
-       - ::before: big blurred color blobs that animate/move (soft)
-       - ::after: repeating high-frequency noise tile (grain)
-     ---------------------------- */
+    body {
+      font-family: Inter, sans-serif;
+      background: #f4f1eb;
+      color: #111;
+      overflow-x: hidden;
+      position: relative;
+    }
 
-  /* moving soft blobs (large, blurred, additive) */
-  body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    z-index:-2;
-    pointer-events:none;
-    background-image:
-      radial-gradient(600px 420px at 18% 18%, rgba(255,120,190,0.18), transparent 18%),
-      radial-gradient(700px 420px at 82% 72%, rgba(72,150,255,0.14), transparent 18%),
-      radial-gradient(900px 380px at 50% 135%, rgba(100,235,165,0.10), transparent 18%);
-    background-repeat:no-repeat;
-    filter: blur(60px) saturate(120%);
-    transform: translateZ(0);
-    animation: blobs 20s linear infinite;
-    mix-blend-mode: screen;
-    opacity:0.98;
-  }
+    /* BACKGROUND BLOBS (Eric-style) */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 20% 25%, rgba(255,120,200,0.24), transparent 55%),
+        radial-gradient(circle at 75% 70%, rgba(120,160,255,0.24), transparent 55%),
+        radial-gradient(circle at 45% 120%, rgba(120,255,180,0.20), transparent 75%);
+      filter: blur(50px) saturate(120%);
+      animation: blobMove 22s ease-in-out infinite alternate;
+      z-index: -2;
+    }
 
-  @keyframes blobs{
-    0%{background-position: 18% 18%, 82% 72%, 50% 135%;}
-    25%{background-position: 20% 15%, 80% 70%, 52% 140%;}
-    50%{background-position: 22% 20%, 78% 74%, 48% 130%;}
-    75%{background-position: 19% 22%, 81% 71%, 51% 137%;}
-    100%{background-position: 18% 18%, 82% 72%, 50% 135%;}
-  }
+    @keyframes blobMove {
+      0% {
+        background-position: 20% 25%, 75% 70%, 45% 120%;
+      }
+      100% {
+        background-position: 24% 30%, 70% 65%, 48% 115%;
+      }
+    }
 
-  /* grain tile (high-frequency, slightly transparent) - data URI PNG (tiny) */
-  body::after{
-    content:"";
-    position:fixed;
-    inset:0;
-    z-index:-1;
-    pointer-events:none;
-    /* small high-frequency noise embedded as PNG (very small base64 placeholder repeated) */
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABNklEQVR4nO3WUQ0AIBAEwfp/6c2q0qUe5ABe1rG7k4/b5ESBEARBEARBEBEBE0f8A0m9nXy3m2zM1fQ1dW6b8d9tGk0t2b9tGk0t2b9tGk0t2b9tGk0t2b9tGk0t2b9tGk0t2b9tGk0t2b9tGk0t2b9tGk0t2b9tGk0t2b9tGk0t2b9tGk0t2b9tGk0t2b9tGk8r3Q1kQARBEBEBEBEBEBEBEBEBEBEBEBEBEBEBEBEBEBED8BvgFhamq3z2tzgAAAAASUVORK5CYII=");
-    background-repeat: repeat;
-    opacity: 0.28;
-    mix-blend-mode: multiply;
-  }
+    /* VERY FINE GRAIN */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYVAAAAE0lEQVQImWP8////fwYgYGBgYAAAZ0AAVHSklEAAAAASUVORK5CYII=");
+      opacity: 0.22;
+      mix-blend-mode: multiply;
+      z-index: -1;
+    }
 
-  /* small accessibility option: reduce motion */
-  @media (prefers-reduced-motion: reduce){
-    body::before, body::after { animation: none; transition: none; }
-  }
+    /* HERO (Option C layout) */
+    .hero {
+      padding-top: 160px;
+      max-width: 850px;
+      margin: 0 auto;
+      padding-left: 24px;
+      text-align: left;
+    }
 
-  /* ----------------------------
-     Layout: hero first view only
-     ---------------------------- */
-  .hero {
-    height: 100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding: 0 18px;
-    flex-direction:column;
-  }
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
 
-  .hero h1{
-    font-size: 84px; /* large, matches Eric scale */
-    line-height: 0.95;
-    font-weight:800;
-    color: var(--text);
-    margin:0;
-    text-shadow:
-      0 14px 40px rgba(72,150,255,0.06),
-      0 3px 16px rgba(255,120,190,0.04);
-    transform: translateZ(0);
-    will-change: transform;
-  }
+    .hero .subtitle {
+      font-size: 1.35rem;
+      opacity: 0.85;
+      margin-bottom: 45px;
+    }
 
-  .hero .roles{
-    margin-top:16px;
-    color:var(--muted);
-    font-weight:700;
-    letter-spacing:0.1em;
-    display:flex;
-    gap:12px;
-    justify-content:center;
-  }
-  .hero .roles span{
-    background: rgba(0,0,0,0.02);
-    padding:6px 10px;
-    border-radius:9px;
-    border:1px solid rgba(0,0,0,0.04);
-    font-size:13px;
-  }
+    /* SECTIONS */
+    section {
+      max-width: 850px;
+      margin: 140px auto;
+      padding: 0 24px;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
 
-  /* push main content below fold so hero is the only thing visible initially */
-  main{
-    width:100%;
-    max-width:760px;
-    margin: calc(100vh + 36px) auto 140px;
-    padding: 0 22px;
-  }
+    section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-  /* section headings (muted label) */
-  .label{
-    font-size:13px;
-    font-weight:700;
-    color:var(--muted);
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    margin-bottom:12px;
-  }
+    h2 {
+      font-size: 1.9rem;
+      margin-bottom: 22px;
+      font-weight: 700;
+    }
 
-  h2{
-    font-size:28px;
-    margin:0 0 12px 0;
-    color:var(--text);
-  }
+    .card {
+      background: rgba(255,255,255,0.45);
+      backdrop-filter: blur(18px);
+      padding: 28px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.6);
+      box-shadow: 0 0 22px rgba(0,0,0,0.06);
+      position: relative;
+    }
 
-  /* liquid glass card */
-  .card{
-    background: rgba(255,255,255,0.40);
-    backdrop-filter: blur(18px) saturate(160%);
-    -webkit-backdrop-filter: blur(18px) saturate(160%);
-    border: 1px solid rgba(255,255,255,0.7);
-    padding: 20px 18px;
-    border-radius: 14px;
-    box-shadow: 0 10px 30px rgba(16,24,40,0.04);
-    color:var(--text);
-  }
+    /* ABOUT IMAGE (Eric-style) */
+    .about-image {
+      position: absolute;
+      top: 0; right: 0;
+      width: 50%;
+      height: 100%;
+      border-radius: 18px;
+      overflow: hidden;
+      z-index: -1;
+      opacity: 0.35;
+    }
+    .about-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: blur(12px) saturate(120%);
+      transform: scale(1.1);
+    }
 
-  .lead{ color:var(--muted); line-height:1.7; font-size:16px; }
+    /* SKILLS GRID */
+    .skills-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .skills-grid strong {
+      font-size: 1.15rem;
+      margin-bottom: 8px;
+      display: block;
+    }
 
-  /* skills vertical groups like Eric */
-  .skills { display:flex; flex-direction:column; gap:26px; }
-  .skill-group h3{margin:0 0 10px 0;font-size:18px}
-  .skill-group ul{list-style:none;padding-left:0;color:var(--muted);line-height:1.9;margin:0}
-
-  /* spacing between sections */
-  section { margin-bottom:28px; opacity:0; transform: translateY(36px); will-change: transform, opacity; }
-
-  /* STAGGERED REVEAL - initial state handled in JS for true Eric-style */
-  /* small responsive tweaks */
-  @media (max-width:760px){
-    .hero h1{font-size:42px}
-    main{margin-top:80vh}
-  }
-</style>
+    /* RESPONSIVE */
+    @media (max-width: 800px) {
+      .about-image {
+        display: none;
+      }
+      .hero {
+        text-align: center;
+        padding-left: 0;
+      }
+    }
+  </style>
 </head>
 <body>
-
-  <!-- HERO -->
-  <header class="hero" role="banner" aria-label="Intro">
+  <div class="hero">
     <h1>Hey! I'm Vale.</h1>
-    <div class="roles" aria-hidden="false">
-      <span>programmer</span>
-      <span>builder</span>
-      <span>artist</span>
+    <div class="subtitle">programmer • builder • artist</div>
+  </div>
+
+  <section id="projects">
+    <h2>Project 1 — Surreal</h2>
+    <div class="card">
+      Surreal is my own little game made in Godot using C++ and GDScript.<br>
+      I started it during a boring week… and somehow it became something I actually care about.
     </div>
-  </header>
+    <div class="card">
+      <h2 style="font-size:1.9rem; margin-top:30px">Project 2 — Coming Soon</h2>
+      <p style="margin-top:4px; color: #555;">Coming soon.</p>
+    </div>
+    <div class="card">
+      <h2 style="font-size:1.9rem; margin-top:30px">Project 3 — Coming Soon</h2>
+      <p style="margin-top:4px; color: #555;">Coming soon.</p>
+    </div>
+  </section>
 
-  <!-- MAIN CONTENT (pushed below fold) -->
-  <main role="main" aria-live="polite">
-    <!-- PROJECTS -->
-    <section id="projects">
-      <div class="label">Projects</div>
-      <div class="card">
-        <h2>Project 1 — Surreal</h2>
-        <p class="lead">Surreal is my own little game made in Godot using C++ and GDScript. I started it during a boring week… and somehow it became something I actually care about.</p>
+  <section id="about">
+    <h2>About Me</h2>
+    <div class="card" style="min-height:250px;">
+      <div class="about-image">
+        <img src="https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Fwallpapers.com%2Fimages%2Fhd%2F4k-mountain-l3f04sogeaabr5h0.jpg&sp=1763985986Tf83e8aefdabe13c88f2e2c4e37f0202c5f8b55c75c82cde80a1f7e00b5538f8b" alt="Mountain" />
       </div>
+      <p>I'm a game developer and computer science student. Recently, I've been developing the game “Surreal”.</p>
+    </div>
+  </section>
 
-      <div style="height:12px"></div>
+  <section id="skills">
+    <h2>Skills</h2>
+    <div class="skills-grid">
+      <div class="card"><strong>Languages</strong>Python, Java, C, C#, C++, GLSL, Assembly, Typescript</div>
+      <div class="card"><strong>Design</strong>3D modeling, traditional art, sound design, music, software design</div>
+      <div class="card"><strong>Tools & Frameworks</strong>Godot, Blender, OpenGL, Git, FL Studio</div>
+    </div>
+  </section>
 
-      <div class="card" style="margin-top:12px">
-        <h2 style="font-size:20px;margin-bottom:8px">Project 2 — Coming Soon</h2>
-        <p class="lead">Coming soon.</p>
-      </div>
-
-      <div style="height:12px"></div>
-
-      <div class="card" style="margin-top:12px">
-        <h2 style="font-size:20px;margin-bottom:8px">Project 3 — Coming Soon</h2>
-        <p class="lead">Coming soon.</p>
-      </div>
-    </section>
-
-    <!-- ABOUT -->
-    <section id="about" style="margin-top:28px">
-      <div class="label">About</div>
-      <div class="card lead">I'm a game developer and computer science student. Recently, I've been developing the game "Surreal".</div>
-    </section>
-
-    <!-- SKILLS -->
-    <section id="skills" style="margin-top:28px">
-      <div class="label">Skills</div>
-      <div class="skills">
-        <div class="skill-group card">
-          <h3>Languages</h3>
-          <ul>
-            <li>Python</li>
-            <li>Java</li>
-            <li>C</li>
-            <li>C#</li>
-            <li>C++</li>
-            <li>GLSL</li>
-            <li>Assembly</li>
-            <li>Typescript</li>
-          </ul>
-        </div>
-
-        <div class="skill-group card">
-          <h3>Tools / Frameworks</h3>
-          <ul>
-            <li>Godot</li>
-            <li>Blender</li>
-            <li>OpenGL</li>
-            <li>Git</li>
-            <li>FL Studio</li>
-          </ul>
-        </div>
-
-        <div class="skill-group card">
-          <h3>Design</h3>
-          <ul>
-            <li>3D modeling</li>
-            <li>Traditional art</li>
-            <li>Sound design</li>
-            <li>Music</li>
-            <li>Software design</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- custom cursor (simple) -->
-  <div id="cursor-dot" style="position:fixed;left:0;top:0;width:10px;height:10px;border-radius:50%;background:#000;pointer-events:none;transform:translate(-50%,-50%);z-index:9999;mix-blend-mode:normal;opacity:0.95;"></div>
-  <div id="cursor-outline" style="position:fixed;left:0;top:0;width:30px;height:30px;border-radius:50%;border:2px solid #000;pointer-events:none;transform:translate(-50%,-50%);z-index:9999;opacity:0.35;"></div>
-
-<script>
-/* ----------------------------
-   Staggered reveal (Eric Alfaro style)
-   - reveal each section's children with short stagger
-   ---------------------------- */
-(function(){
-  const sections = document.querySelectorAll('main section');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const container = entry.target;
-      // gather direct children to stagger (label + cards inside)
-      const children = Array.from(container.querySelectorAll('.label, .card, .skill-group, h2, p'));
-      children.forEach((el, i) => {
-        el.style.opacity = 0;
-        el.style.transform = 'translateY(18px)';
-        setTimeout(() => {
-          el.style.transition = 'opacity .6s cubic-bezier(.2,.9,.25,1), transform .6s cubic-bezier(.2,.9,.25,1)';
-          el.style.opacity = 1;
-          el.style.transform = 'translateY(0)';
-        }, i * 120); // 120ms stagger — adjust for tighter/looser
+  <script>
+    // Scroll reveal code
+    const sections = document.querySelectorAll('section');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          obs.unobserve(entry.target);
+        }
       });
-      observer.unobserve(container);
-    });
-  }, {threshold: 0.14});
-  sections.forEach(s => observer.observe(s));
-})();
-
-/* ----------------------------
-   Cursor follow
-   ---------------------------- */
-(function(){
-  const dot = document.getElementById('cursor-dot');
-  const outline = document.getElementById('cursor-outline');
-  let lastX = 0, lastY = 0;
-  document.addEventListener('mousemove', (e) => {
-    const x = e.clientX, y = e.clientY;
-    dot.style.left = x + 'px';
-    dot.style.top = y + 'px';
-    outline.style.left = x + 'px';
-    outline.style.top = y + 'px';
-  });
-  // optional: enlarge on links
-  document.addEventListener('mouseover', (e) => {
-    const t = e.target;
-    if (t.tagName === 'A' || t.closest('.card')) {
-      outline.style.transform = 'translate(-50%,-50%) scale(1.4)';
-      outline.style.opacity = '0.6';
-    }
-  });
-  document.addEventListener('mouseout', (e) => {
-    outline.style.transform = 'translate(-50%,-50%) scale(1)';
-    outline.style.opacity = '0.35';
-  });
-})();
-
-/* ensure hero is visible on load */
-window.scrollTo(0,0);
-</script>
+    }, { threshold: 0.2 });
+    sections.forEach(s => obs.observe(s));
+  </script>
 </body>
 </html>
