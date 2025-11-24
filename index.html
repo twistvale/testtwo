@@ -1,192 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vale</title>
-  <style>
-    :root {
-      --bg: #0b0b0d;
-      --fg: #ffffff;
-      --fg-dim: #b3b3b3;
-      --accent: #7aa2ff;
-      --glass: rgba(255, 255, 255, 0.05);
-      --radius: 18px;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Vale — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#060608; /* deep near-black like ericalfaro.dev */
+    --fg:#eaf0ff;
+    --muted:#9aa3b8;
+    --accent-pink:#ff4da0;
+    --accent-blue:#4da6ff;
+    --accent-green:#6ef2b0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--fg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-    }
+  /* GRAIN via SVG tile (data URI). Works reliably across pages */
+  body::before{
+    content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.28;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)' fill='black' opacity='0.18'/></svg>");
+    background-repeat: repeat;
+    mix-blend-mode: overlay;
+  }
 
-    body {
-      background: var(--bg);
-      color: var(--fg);
-      overflow-x: hidden;
+  /* colorful soft gradients similar to Eric's */
+  body::after{
+    content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.95;
+    background-image:
+      radial-gradient(600px 350px at 20% 12%, rgba(255,77,160,0.12), transparent 18%),
+      radial-gradient(600px 350px at 80% 70%, rgba(77,166,255,0.10), transparent 18%),
+      radial-gradient(900px 380px at 50% 120%, rgba(110,242,176,0.08), transparent 18%);
+    mix-blend-mode: screen;
+    filter: blur(20px);
+  }
 
-      /* Very strong colorful gradients + ultra grain */
-      background-image:
-        radial-gradient(circle at 20% 10%, rgba(255,70,200,0.25), transparent 60%),
-        radial-gradient(circle at 80% 30%, rgba(80,150,255,0.25), transparent 65%),
-        radial-gradient(circle at 50% 120%, rgba(120,255,180,0.22), transparent 75%),
-        url('noise.png'),
-        url('noise.png'); /* double noise for extreme grain */
-      background-size: cover, cover, cover, 140px, 90px;
-      background-blend-mode: soft-light, screen, overlay, normal, normal;
-    }
+  /* layout */
+  .wrap{position:relative;z-index:2}
+  .hero{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 18px}
+  .hero h1{font-size:88px;line-height:0.95;margin:0;font-weight:800;text-shadow:0 10px 40px rgba(77,166,255,0.06), 0 2px 12px rgba(255,77,160,0.06)}
+  .roles{margin-top:18px;color:var(--muted);font-weight:600;letter-spacing:0.06em}
+  .roles span{display:inline-block;margin:0 8px;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03)}
 
-    .container {
-      width: 90%;
-      max-width: 800px;
-      margin: 120px auto;
-    }
+  /* content area */
+  main{max-width:760px;margin:110vh auto 120px auto;padding:0 22px;position:relative;z-index:3}
 
-    h1 {
-      font-size: 70px;
-      font-weight: 800;
-      margin-bottom: 20px;
-      text-shadow: 0 0 22px rgba(255,255,255,0.4);
-      animation: glow 3s infinite ease-in-out;
-    }
+  section{margin-bottom:40px}
+  h2{font-size:20px;color:var(--muted);font-weight:700;letter-spacing:0.12em;margin-bottom:14px}
 
-    @keyframes glow {
-      0%, 100% { text-shadow: 0 0 18px #7aa2ff77; }
-      50% { text-shadow: 0 0 32px #7aa2ffff; }
-    }
+  .card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);padding:22px;border-radius:14px;backdrop-filter:blur(10px)}
+  .project-title{font-size:20px;font-weight:700;margin-bottom:8px}
+  .lead{color:var(--muted);line-height:1.6}
 
-    .subtitle {
-      font-size: 22px;
-      color: var(--fg-dim);
-      margin-bottom: 250px; /* large spacing like ericalfaro.dev */
-      text-shadow: 0 0 12px rgba(255,255,255,0.25);
-    }
+  /* Skills layout like Eric: headings with vertical lists, spacious */
+  .skills{display:flex;flex-direction:column;gap:22px}
+  .skill-group h3{margin:0 0 8px 0;font-size:18px;color:var(--fg);font-weight:700}
+  .skill-group ul{list-style:none;padding-left:0;color:var(--muted);line-height:1.9;column-count:1}
 
-    /* Fade-in scroll sections */
-    .section {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: 0.8s ease;
-    }
+  /* responsive */
+  @media (max-width:720px){
+    .hero h1{font-size:44px}
+    main{margin-top:90vh}
+  }
 
-    .section.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .section-title {
-      font-size: 28px;
-      font-weight: 600;
-      margin: 50px 0 20px;
-      text-shadow: 0 0 12px rgba(255,255,255,0.25);
-    }
-
-    .glass {
-      background: var(--glass);
-      padding: 25px 28px;
-      border-radius: var(--radius);
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(255,255,255,0.1);
-      margin-bottom: 25px;
-      transition: 0.25s ease;
-      text-shadow: 0 0 8px rgba(255,255,255,0.18);
-    }
-
-    .glass:hover {
-      transform: translateY(-4px);
-      border-color: rgba(255,255,255,0.18);
-    }
-
-    .project-title {
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    p {
-      font-size: 18px;
-      color: var(--fg-dim);
-      margin-bottom: 20px;
-    }
-
-    .skills-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 25px;
-      margin-top: 20px;
-    }
-
-    .skill-box {
-      background: var(--glass);
-      padding: 20px;
-      border-radius: var(--radius);
-      border: 1px solid rgba(255,255,255,0.1);
-      backdrop-filter: blur(12px);
-      text-shadow: 0 0 8px rgba(255,255,255,0.15);
-    }
-
-    .skill-title {
-      font-size: 20px;
-      margin-bottom: 10px;
-      font-weight: 600;
-    }
-  </style>
+  /* reveal on scroll */
+  .reveal{opacity:0;transform:translateY(18px);transition:all .7s cubic-bezier(.2,.9,.25,1)}
+  .reveal.visible{opacity:1;transform:none}
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>Hey! I'm Vale.</h1>
-    <div class="subtitle">programmer • builder • artist</div>
-
-    <div class="section" id="projects">
-      <div class="section-title">Projects</div>
-
-      <div class="glass">
-        <div class="project-title">Surreal</div>
-        <p>Surreal is my own little game made in Godot using C++ and GDScript. I started it during a boring week… and somehow it became something I actually care about.</p>
-      </div>
-
-      <div class="glass">
-        <div class="project-title">Project 2 — Coming Soon</div>
-        <p>More projects are on the way.</p>
-      </div>
-
-      <div class="glass">
-        <div class="project-title">Project 3 — Coming Soon</div>
-        <p>Stay tuned.</p>
-      </div>
+  <div class="wrap">
+    <div class="hero">
+      <h1>Hey! I'm Vale.</h1>
+      <div class="roles"><span>programmer</span><span>builder</span><span>artist</span></div>
     </div>
 
-    <div class="section" id="skills">
-      <div class="section-title">Skills</div>
-
-      <div class="skills-grid">
-        <div class="skill-box">
-          <div class="skill-title">Languages</div>
-          <p>Python, Java, C, C#, C++, GLSL, Assembly, Typescript</p>
+    <main>
+      <section id="work" class="reveal">
+        <h2>Projects</h2>
+        <div class="card">
+          <div class="project-title">Project 1 — Surreal</div>
+          <div class="lead">Surreal is my own little game made in Godot using C++ and GDScript. I started it during a boring week… and somehow it became something I actually care about.</div>
         </div>
-
-        <div class="skill-box">
-          <div class="skill-title">Design</div>
-          <p>3D modeling, traditional art, sound design, music, software design</p>
+        <div style="height:14px"></div>
+        <div class="card" style="margin-top:14px">
+          <div class="project-title">Project 2 — Coming Soon</div>
+          <div class="lead">Coming soon.</div>
         </div>
-
-        <div class="skill-box">
-          <div class="skill-title">Tools & Frameworks</div>
-          <p>Godot, Blender, OpenGL, Git, FL Studio</p>
+        <div style="height:14px"></div>
+        <div class="card" style="margin-top:14px">
+          <div class="project-title">Project 3 — Coming Soon</div>
+          <div class="lead">Coming soon.</div>
         </div>
-      </div>
-    </div>
+      </section>
+
+      <section id="about" class="reveal">
+        <h2>About</h2>
+        <div class="card lead">I'm a game developer and computer science student. Recently, I've been developing the game "Surreal".</div>
+      </section>
+
+      <section id="skills" class="reveal">
+        <h2>Skills</h2>
+        <div class="skills">
+          <div class="skill-group">
+            <h3>Languages</h3>
+            <ul>
+              <li>Python</li>
+              <li>Java</li>
+              <li>C</li>
+              <li>C#</li>
+              <li>C++</li>
+              <li>GLSL</li>
+              <li>Assembly</li>
+              <li>Typescript</li>
+            </ul>
+          </div>
+
+          <div class="skill-group">
+            <h3>Tools / Frameworks</h3>
+            <ul>
+              <li>Godot</li>
+              <li>Blender</li>
+              <li>OpenGL</li>
+              <li>Git</li>
+              <li>FL Studio</li>
+            </ul>
+          </div>
+
+          <div class="skill-group">
+            <h3>Design</h3>
+            <ul>
+              <li>3D modeling</li>
+              <li>Traditional art</li>
+              <li>Sound design</li>
+              <li>Music</li>
+              <li>Software design</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+    </main>
   </div>
 
-  <script>
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('visible');
-      });
-    }, { threshold: 0.1 });
+<script>
+  // reveal sections on scroll
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+  },{threshold:0.12});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
-    document.querySelectorAll('.section').forEach(sec => observer.observe(sec));
-  </script>
+  // ensure only hero visible on load (scroll to top)
+  window.scrollTo(0,0);
+</script>
 </body>
 </html>
